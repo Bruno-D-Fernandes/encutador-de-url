@@ -1,0 +1,8 @@
+CREATE TABLE users_tb(
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password VARCHAR(250) NOT NULL,
+    credit DECIMAL(16, 2) NOT NULL DEFAULT 0.00,
+    CONSTRAINT minimum_credit CHECK (credit >= 0.00)
+);
