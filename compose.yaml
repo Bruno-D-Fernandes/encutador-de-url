@@ -1,0 +1,13 @@
+services:
+  db:
+    build: ./database
+    container_name: encurta_db
+    environment:
+      - ENV MYSQL_ROOT_PASSWORD=RootPassword
+      - ENV MYSQL_USER=Bruno
+      - ENV MYSQL_PASSWORD=Bruno123
+      - ENV MYSQL_DATABASE=encurta_db
+
+    ports:
+        - "3306:3306"
+    volumes:
