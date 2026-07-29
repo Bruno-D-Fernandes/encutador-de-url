@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -17,12 +16,12 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UrlB {
+public class UrlBa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long uuid;
 
     @Column(name = "original_uri", length = 450, nullable = false)
     private String originalUri;
@@ -32,7 +31,7 @@ public class UrlB {
 
     @ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_owner", nullable = false)
-    private User owner;
+    private UserBa owner;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -44,13 +43,13 @@ public class UrlB {
     public boolean equals(Object o) {
         if(o == this) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UrlB urlB = (UrlB) o;
-        return Objects.equals(id, urlB.id) && Objects.equals(originalUri, urlB.originalUri) && Objects.equals(shortUri, urlB.shortUri) && Objects.equals(createdAt, urlB.createdAt) && Objects.equals(expiresAt, urlB.expiresAt);
+        UrlBa urlBa = (UrlBa) o;
+        return Objects.equals(uuid, urlBa.uuid) && Objects.equals(originalUri, urlBa.originalUri) && Objects.equals(shortUri, urlBa.shortUri) && Objects.equals(createdAt, urlBa.createdAt) && Objects.equals(expiresAt, urlBa.expiresAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, originalUri, shortUri, createdAt, expiresAt);
+        return Objects.hash(uuid, originalUri, shortUri, createdAt, expiresAt);
     }
 
     @Override

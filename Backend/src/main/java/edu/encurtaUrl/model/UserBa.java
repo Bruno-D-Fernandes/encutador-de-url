@@ -12,7 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserB {
+public class UserBa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,13 +32,13 @@ public class UserB {
     private BigDecimal credit;
 
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<UrlB> urls;
+    private List<UrlBa> urls;
 
     @Override
     public boolean equals(Object o) {
         if(o == this) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserB userB = (UserB) o;
+        UserBa userB = (UserBa) o;
         return Objects.equals(id, userB.id) && Objects.equals(name, userB.name) && Objects.equals(email, userB.email) && Objects.equals(password, userB.password) && Objects.equals(credit, userB.credit);
     }
 
