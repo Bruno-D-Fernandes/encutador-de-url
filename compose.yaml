@@ -24,7 +24,7 @@ services:
     networks:
       - encurta_ntw
 
-# now i need to study about the difference between volume and bind amount
+# now, i need to study about the difference between volume and bind amount
 
   backend:
     build: ./backend
