@@ -1,0 +1,2 @@
+/* Untested */
+ALTER TABLE users_tb MODIFY COLUMN id CHAR(36) NOT NULL
