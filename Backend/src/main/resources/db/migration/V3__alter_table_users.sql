@@ -1,2 +1,9 @@
-/* Untested */
-ALTER TABLE users_tb MODIFY COLUMN id CHAR(36) NOT NULL
+ALTER TABLE urls_tb
+DROP FOREIGN KEY fk_user;
+
+ALTER TABLE users_tb
+MODIFY COLUMN id CHAR(36) NOT NULL;
+
+ALTER TABLE urls_tb
+ADD CONSTRAINT fk_user
+FOREIGN KEY (id_owner) REFERENCES users_tb(id);
