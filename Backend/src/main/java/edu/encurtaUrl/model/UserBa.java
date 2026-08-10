@@ -1,8 +1,11 @@
 package edu.encurtaUrl.model;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserBa {
+public class UserBa implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -55,5 +58,16 @@ public class UserBa {
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Implementar níveis de conta a partir de crédito
+        return List.of();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 }
