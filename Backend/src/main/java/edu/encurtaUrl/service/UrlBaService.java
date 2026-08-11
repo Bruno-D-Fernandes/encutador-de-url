@@ -7,12 +7,16 @@ import edu.encurtaUrl.repository.UrlBaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.InvalidUrlException;
+import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class UrlBaService {
@@ -48,13 +52,31 @@ public class UrlBaService {
     }
 
     @Transactional
-    public void createShortUri(String originalUri, UserBa userBa){
+    public String createShortUri(String originalUri, UserBa userBa){
+
+
+        // Validation
+        // unshift http protocol at the start
+        if(!originalUri.startsWith("https://") || !originalUri.startsWith("http://")){
+            originalUri = "https://" + originalUri;
+        }
+
+
+        try {
+            URL url = URI.create(originalUri).toURL();
+        } catch (Exception e) {
+            throw new InvalidUrlException("Invalid url");
+        }
+
         String shortUri = generateRandomUri();
 
         // For now, it is only valid for 2 hours
         UrlBa urlBa = new UrlBa(null, originalUri, shortUri, userBa, Instant.now(), Instant.now().plus(Duration.ofHours(2)));
 
         urlBaRepository.save(urlBa);
+
+        // todo return the complete uri
+        return shortUri;
     }
 
     // private
