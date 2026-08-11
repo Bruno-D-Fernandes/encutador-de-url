@@ -44,19 +44,11 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
 
-
-
-
-
     public String getTokenFromAuthorization(String authorization){
         if(authorization.length() < 7 || null == null) return null;
 
         String token = authorization.replace("Bearer: ", "");
         return token;
     }
-
-
-
-
 
 }

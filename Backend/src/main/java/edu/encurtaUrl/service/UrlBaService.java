@@ -13,7 +13,6 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UrlBaService {
@@ -25,7 +24,6 @@ public class UrlBaService {
     public UrlBaService(UrlBaRepository urlBaRepository) {
         this.urlBaRepository = urlBaRepository;
     }
-
 
     public URI redirectMeUri(String urlEncurted){
         UrlBa urlEntity = urlBaRepository.findByShortUri(urlEncurted)
@@ -50,15 +48,16 @@ public class UrlBaService {
     }
 
     @Transactional
-    public Object createShortUri(String originalUri, UserBa userBa){
+    public void createShortUri(String originalUri, UserBa userBa){
         String shortUri = generateRandomUri();
 
         // For now, it is only valid for 2 hours
         UrlBa urlBa = new UrlBa(null, originalUri, shortUri, userBa, Instant.now(), Instant.now().plus(Duration.ofHours(2)));
 
-        return "";
+        urlBaRepository.save(urlBa);
     }
 
+    // private
     private String generateRandomUri(){
         String charactersString = "abcdefghijklmnopqrstuvwXyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder randomUrl = new StringBuilder();

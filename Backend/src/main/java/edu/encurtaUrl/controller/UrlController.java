@@ -21,7 +21,7 @@ public class UrlController {
         this.urlBaService = urlBaService;
     }
 
-    @GetMapping("/shortUrl}")
+    @GetMapping("/{shortUrl}")
     public ResponseEntity redirectMe(
             @PathVariable String shortUrl
     ){
@@ -34,7 +34,7 @@ public class UrlController {
                 .build();
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity createShortUri(
             @RequestParam String originalUri,
             @AuthenticationPrincipal UserBa user

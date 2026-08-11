@@ -1,0 +1,17 @@
+#spring.application.name=encurtaUrl
+#
+#spring.datasource.url=jdbc:mysql://encurta_db:3306/encurta_db
+#spring.datasource.username=Bruno
+#spring.datasource.password=Bruno123
+
+spring:
+    apliccation:
+        name: encurtaUrl
+    datasource:
+        url: jdbc:mysql://encurta_db:3306/encurta_db
+        username: Bruno
+        password: Bruno123
+
+    jpa:
+        hibernate:
+            ddl-auto: validate

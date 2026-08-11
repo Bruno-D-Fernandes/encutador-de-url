@@ -34,7 +34,7 @@ public class UserBa implements UserDetails {
     @Column(nullable = false)
     private BigDecimal credit;
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UrlBa> urls;
 
     @Override
