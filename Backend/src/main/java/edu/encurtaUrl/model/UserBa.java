@@ -1,5 +1,7 @@
 package edu.encurtaUrl.model;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +38,13 @@ public class UserBa implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UrlBa> urls;
+
+    public UserBa(@NotBlank(message = "Name cant be blank") @Size(min = 5, max = 70, message = "Invalid size") String name, @NotBlank(message = "Email cant be blank") String email, @NotBlank(message = "Password cant be blank") String password, BigDecimal credit) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.credit = credit;
+    }
 
     @Override
     public boolean equals(Object o) {
