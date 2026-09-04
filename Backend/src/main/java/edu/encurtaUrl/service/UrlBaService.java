@@ -1,6 +1,7 @@
 package edu.encurtaUrl.service;
 
 import edu.encurtaUrl.dto.response.UrlResponseDto;
+import edu.encurtaUrl.exception.urlRoutine.InvalidUrlException;
 import edu.encurtaUrl.model.UrlBa;
 import edu.encurtaUrl.model.UserBa;
 import edu.encurtaUrl.repository.UrlBaRepository;
@@ -8,7 +9,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.InvalidUrlException;
 import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
@@ -42,44 +42,61 @@ public class UrlBaService {
             throw new RuntimeException("Short url expired");
         }
 
-        // unshift http protocol at the start
         String fullUri = urlEntity.getOriginalUri();
-
-        if(!fullUri.startsWith("https://") && !fullUri.startsWith("http://")){
-            fullUri = "https://" + fullUri;
-        }
+        String ValidatedfullUri = validateUrl(fullUri);
 
         //URI .create faz uma parse a partir de uma url completa
-        URI originalUri = URI.create(fullUri);
+        URI originalUri = URI.create(ValidatedfullUri);
 
         return originalUri;
     }
 
     @Transactional
     public String createShortUri(String originalUri, UserBa userBa){
+        // make userBa change to managed lifecycle
         UserBa user = entityManager.merge(userBa);
-        // Validation
-        // unshift http protocol at the start
-        if(!originalUri.startsWith("https://") && !originalUri.startsWith("http://")){
-            originalUri = "https://" + originalUri;
-        }
 
-        try {
-            URL url = URI.create(originalUri).toURL();
-        } catch (Exception e) {
-            throw new InvalidUrlException("Invalid url");
-        }
+        String validatedFullUrl = validateUrl(originalUri);
 
         String shortUri = generateRandomUri();
 
-
         // For now, it is only valid for 2 hours
-        UrlBa urlBa = new UrlBa(null, originalUri, shortUri, user, Instant.now(), Instant.now().plus(Duration.ofHours(2)));
+        UrlBa urlBa = new UrlBa(null, validatedFullUrl, shortUri, user, Instant.now(), Instant.now().plus(Duration.ofHours(2)));
 
         urlBaRepository.save(urlBa);
 
         // todo return the complete uri
         return shortUri;
+    }
+
+    public List<UrlResponseDto> getAllUrlByUser(UserBa userBa){
+        List<UrlBa> urlsByOwner = urlBaRepository.findByOwner(userBa);
+
+        List<UrlResponseDto> response = urlsByOwner.stream()
+                .map(UrlResponseDto::new)
+                .toList();
+
+        return response;
+    }
+
+    private String validateUrl(String url){
+
+        if(url.startsWith("/")) throw new InvalidUrlException();
+
+        // unshift http protocol at the start
+        if(!url.startsWith("https://") && !url.startsWith("http://")){
+            url = "https://" + url;
+        }
+
+        // Validation
+        try {
+            URL urlValidation = URI.create(url).toURL();
+            System.out.println(urlValidation);
+        } catch (Exception e) {
+            throw new InvalidUrlException();
+        }
+
+        return url;
     }
 
     // private
@@ -101,14 +118,6 @@ public class UrlBaService {
         return randomUrl.toString();
     }
 
-    public List<UrlResponseDto> getAllUrlByUser(UserBa userBa){
-        List<UrlBa> urlsByOwner = urlBaRepository.findByOwner(userBa);
 
-        List<UrlResponseDto> response = urlsByOwner.stream()
-                .map(UrlResponseDto::new)
-                .toList();
-
-        return response;
-    }
 
 }

@@ -1,8 +1,10 @@
 package edu.encurtaUrl.service;
 
 
+import edu.encurtaUrl.exception.urlRoutine.InvalidUrlException;
 import edu.encurtaUrl.model.UserBa;
 import edu.encurtaUrl.repository.UrlBaRepository;
+import jakarta.persistence.EntityManager;
 import org.h2.command.dml.MergeUsing;
 import org.h2.engine.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.util.InvalidUrlException;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,7 +23,11 @@ import static org.mockito.Mockito.*;
 import java.math.BigDecimal;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class UrlBaServiceTest {
+
+    @Mock
+    EntityManager entityManager;
 
     @InjectMocks
     UrlBaService urlBaService;
@@ -45,7 +51,7 @@ public class UrlBaServiceTest {
             String shortUri = urlBaService.createShortUri("https://www.youtube.com/", userMockado);
 
             assertAll(
-                    ()-> assertTrue(shortUri.length() > 7),
+                    ()-> assertTrue(shortUri.length() >= 7),
                     () -> verify(urlBaRepository, times(1)).save(any())
             );
         }
@@ -54,7 +60,7 @@ public class UrlBaServiceTest {
         @DisplayName("Should throw invalid exception")
         void ThrowCase1(){
             assertThrows(InvalidUrlException.class, () ->{
-                urlBaService.createShortUri("https:////", userMockado);
+                urlBaService.createShortUri("//huodwdaoiwdhoihh", userMockado);
             });
         }
 

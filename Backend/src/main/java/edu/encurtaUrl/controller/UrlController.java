@@ -44,7 +44,7 @@ public class UrlController {
 
         String shortUri = urlBaService.createShortUri(originalUri.get("originalUri"), user);
 
-        return ResponseEntity.ok(shortUri);
+        return ResponseEntity.ok(Map.of("Shortened URL", shortUri));
     }
 
 
