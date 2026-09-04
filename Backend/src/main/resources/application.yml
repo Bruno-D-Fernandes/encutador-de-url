@@ -5,7 +5,7 @@
 #spring.datasource.password=Bruno123
 
 spring:
-    apliccation:
+    application:
         name: encurtaUrl
     datasource:
         url: jdbc:mysql://encurta_db:3306/encurta_db

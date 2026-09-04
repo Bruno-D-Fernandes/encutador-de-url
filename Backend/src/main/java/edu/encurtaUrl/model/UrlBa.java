@@ -21,7 +21,7 @@ public class UrlBa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long uuid;
+    private Long id;
 
     @Column(name = "original_uri", length = 450, nullable = false)
     private String originalUri;
@@ -29,7 +29,7 @@ public class UrlBa {
     @Column(name = "short_uri", length = 450, nullable = false)
     private String shortUri;
 
-    @ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "id_owner", nullable = false)
     private UserBa owner;
 
@@ -44,12 +44,12 @@ public class UrlBa {
         if(o == this) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UrlBa urlBa = (UrlBa) o;
-        return Objects.equals(uuid, urlBa.uuid) && Objects.equals(originalUri, urlBa.originalUri) && Objects.equals(shortUri, urlBa.shortUri) && Objects.equals(createdAt, urlBa.createdAt) && Objects.equals(expiresAt, urlBa.expiresAt);
+        return Objects.equals(id, urlBa.id) && Objects.equals(originalUri, urlBa.originalUri) && Objects.equals(shortUri, urlBa.shortUri) && Objects.equals(createdAt, urlBa.createdAt) && Objects.equals(expiresAt, urlBa.expiresAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, originalUri, shortUri, createdAt, expiresAt);
+        return Objects.hash(id, originalUri, shortUri, createdAt, expiresAt);
     }
 
     @Override

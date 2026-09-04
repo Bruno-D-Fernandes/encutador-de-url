@@ -22,7 +22,7 @@ public class UserBa implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", length = 36)
-    private String id;
+    private String uuid;
 
     @Column(length = 100, nullable = false)
     private String name;
@@ -36,7 +36,7 @@ public class UserBa implements UserDetails {
     @Column(nullable = false)
     private BigDecimal credit;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UrlBa> urls;
 
     public UserBa(@NotBlank(message = "Name cant be blank") @Size(min = 5, max = 70, message = "Invalid size") String name, @NotBlank(message = "Email cant be blank") String email, @NotBlank(message = "Password cant be blank") String password, BigDecimal credit) {
@@ -51,12 +51,12 @@ public class UserBa implements UserDetails {
         if(o == this) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserBa userB = (UserBa) o;
-        return Objects.equals(id, userB.id) && Objects.equals(name, userB.name) && Objects.equals(email, userB.email) && Objects.equals(password, userB.password) && Objects.equals(credit, userB.credit);
+        return Objects.equals(uuid, userB.uuid) && Objects.equals(name, userB.name) && Objects.equals(email, userB.email) && Objects.equals(password, userB.password) && Objects.equals(credit, userB.credit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, credit);
+        return Objects.hash(uuid, name, email, password, credit);
     }
 
     @Override

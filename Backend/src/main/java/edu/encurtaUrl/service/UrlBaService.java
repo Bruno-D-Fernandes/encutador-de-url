@@ -4,6 +4,7 @@ import edu.encurtaUrl.dto.response.UrlResponseDto;
 import edu.encurtaUrl.model.UrlBa;
 import edu.encurtaUrl.model.UserBa;
 import edu.encurtaUrl.repository.UrlBaRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,14 @@ import java.util.regex.Pattern;
 @Service
 public class UrlBaService {
 
-    private UrlBaRepository urlBaRepository;
+    private final UrlBaRepository urlBaRepository;
     public static final SecureRandom secureRandom = new SecureRandom();
+    private final EntityManager entityManager;
 
     @Autowired
-    public UrlBaService(UrlBaRepository urlBaRepository) {
+    public UrlBaService(UrlBaRepository urlBaRepository, EntityManager entityManager) {
         this.urlBaRepository = urlBaRepository;
+        this.entityManager = entityManager;
     }
 
     public URI redirectMeUri(String urlEncurted){
@@ -41,7 +44,8 @@ public class UrlBaService {
 
         // unshift http protocol at the start
         String fullUri = urlEntity.getOriginalUri();
-        if(!fullUri.startsWith("https://") || !fullUri.startsWith("http://")){
+
+        if(!fullUri.startsWith("https://") && !fullUri.startsWith("http://")){
             fullUri = "https://" + fullUri;
         }
 
@@ -53,14 +57,12 @@ public class UrlBaService {
 
     @Transactional
     public String createShortUri(String originalUri, UserBa userBa){
-
-
+        UserBa user = entityManager.merge(userBa);
         // Validation
         // unshift http protocol at the start
-        if(!originalUri.startsWith("https://") || !originalUri.startsWith("http://")){
+        if(!originalUri.startsWith("https://") && !originalUri.startsWith("http://")){
             originalUri = "https://" + originalUri;
         }
-
 
         try {
             URL url = URI.create(originalUri).toURL();
@@ -70,8 +72,9 @@ public class UrlBaService {
 
         String shortUri = generateRandomUri();
 
+
         // For now, it is only valid for 2 hours
-        UrlBa urlBa = new UrlBa(null, originalUri, shortUri, userBa, Instant.now(), Instant.now().plus(Duration.ofHours(2)));
+        UrlBa urlBa = new UrlBa(null, originalUri, shortUri, user, Instant.now(), Instant.now().plus(Duration.ofHours(2)));
 
         urlBaRepository.save(urlBa);
 

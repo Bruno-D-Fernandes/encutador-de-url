@@ -6,7 +6,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,11 +15,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private JwtService jwtService;
-    private UserBaRepository userBaRepository;
+    private final JwtService jwtService;
+    private final UserBaRepository userBaRepository;
 
     @Autowired
     public JwtFilter(JwtService jwtService, UserBaRepository userBaRepository) {
@@ -33,22 +33,26 @@ public class JwtFilter extends OncePerRequestFilter {
         String authorization = request.getHeader("Authorization");
         String token = getTokenFromAuthorization(authorization);
 
-        if(token != null){
+        if (!token.isEmpty()) {
             String email = jwtService.decodeSubjectToken(token);
-            UserBa userByEmail = userBaRepository.findByEmail(email);
-
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userByEmail, null, userByEmail.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (!email.isEmpty()) {
+                UserBa userByEmail = userBaRepository.findByEmail(email);
+                if (userByEmail != null) {
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(userByEmail, null, userByEmail.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
         }
 
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 
-    public String getTokenFromAuthorization(String authorization){
-        if(authorization.length() < 7 || null == null) return null;
+    public String getTokenFromAuthorization(String authorization) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            return "";
+        }
 
-        String token = authorization.replace("Bearer: ", "");
-        return token;
+        return authorization.substring(7).trim();
     }
 
 }

@@ -9,6 +9,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/encUrl")
@@ -36,13 +38,13 @@ public class UrlController {
 
     @PostMapping
     public ResponseEntity createShortUri(
-            @RequestParam String originalUri,
+            @RequestBody Map<String, String> originalUri,
             @AuthenticationPrincipal UserBa user
             ){
 
-        urlBaService.createShortUri(originalUri, user);
+        String shortUri = urlBaService.createShortUri(originalUri.get("originalUri"), user);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(shortUri);
     }
 
 
