@@ -6,20 +6,22 @@ import edu.encurtaUrl.infra.security.JwtService;
 import edu.encurtaUrl.infra.security.WebSecurityConfig;
 import edu.encurtaUrl.repository.UserBaRepository;
 import edu.encurtaUrl.service.AuthService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import jdk.jfr.ContentType;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,6 +41,9 @@ public class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Nested
     class registerTests {
 
@@ -56,8 +61,6 @@ public class AuthControllerTest {
         @Test
         @DisplayName("Must register successfully")
         void successfulRegister() throws Exception {
-            doNothing().when(authService).register(any(RegisterRequestDto.class));
-
             mockMvc.perform(
                     post("/auth/register")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -70,5 +73,35 @@ public class AuthControllerTest {
                             )
             ).andExpect(status().isOk());
         }
+
+    }
+
+    @Nested
+    class loginTestes{
+
+        @Test
+        @DisplayName("Must receive a JWT token")
+        void loginSuccess() throws Exception {
+
+            when(authService.login(any())).thenReturn("um-token-fake-qualquer");
+
+            String contentAsString = mockMvc.perform(
+                            post("/auth/login")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content("""
+                    {
+                    "email":"Bruno@gmail.com",
+                    "password":"Bruno2310"
+                    }
+                    """)
+                    ).andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            Map<String, String> hashMap = objectMapper.readValue(contentAsString, Map.class);
+            String token = hashMap.get("token:");
+
+            Assertions.assertFalse(token.isBlank());
+        }
+
     }
 }
