@@ -1,9 +1,10 @@
-package edu.encurtaUrl.service;
+package edu.encurtaUrl.unit.service;
 
 
 import edu.encurtaUrl.exception.urlRoutine.InvalidUrlException;
 import edu.encurtaUrl.model.UserBa;
 import edu.encurtaUrl.repository.UrlBaRepository;
+import edu.encurtaUrl.service.UrlBaService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,13 +1,12 @@
 package edu.encurtaUrl.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class LoginRequest {
+public class LoginRequestDto {
 
     @NotBlank(message = "Email cant be blank")
     private String email;

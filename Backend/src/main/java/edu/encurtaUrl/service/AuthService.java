@@ -1,12 +1,11 @@
 package edu.encurtaUrl.service;
 
-import edu.encurtaUrl.dto.request.LoginRequest;
-import edu.encurtaUrl.dto.request.RegisterRequest;
+import edu.encurtaUrl.dto.request.LoginRequestDto;
+import edu.encurtaUrl.dto.request.RegisterRequestDto;
 import edu.encurtaUrl.infra.security.JwtService;
 import edu.encurtaUrl.model.UserBa;
 import edu.encurtaUrl.repository.UserBaRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,20 +30,20 @@ public class AuthService {
     }
 
     @Transactional
-    public String login(LoginRequest loginRequest){
-        Authentication user = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
+    public String login(LoginRequestDto loginRequestDto){
+        Authentication user = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
         authenticationManager.authenticate(user);
 
-        String token = jwtService.createToken(loginRequest.getEmail());
+        String token = jwtService.createToken(loginRequestDto.getEmail());
         return token;
     }
 
 
     @Transactional
-    public void register(RegisterRequest registerRequest){
+    public void register(RegisterRequestDto registerRequestDto){
         // do validation above
         UserBa userBa = new UserBa(
-                registerRequest.getName(), registerRequest.getEmail(), new BCryptPasswordEncoder().encode(registerRequest.getPassword()), BigDecimal.valueOf(0L)
+                registerRequestDto.getName(), registerRequestDto.getEmail(), new BCryptPasswordEncoder().encode(registerRequestDto.getPassword()), BigDecimal.valueOf(0L)
         );
 
         userBaRepository.save(userBa);

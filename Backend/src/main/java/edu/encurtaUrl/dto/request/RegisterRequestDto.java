@@ -7,7 +7,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class RegisterRequest {
+public class RegisterRequestDto {
 
     @NotBlank(message = "Name cant be blank")
     @Size(min = 5, max = 70, message = "Invalid size")

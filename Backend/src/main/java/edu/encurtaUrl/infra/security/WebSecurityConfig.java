@@ -41,7 +41,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChainAuthorizarion(HttpSecurity http) throws Exception{
         return http
 
-            .securityMatcher("/authorization/**")
+//            .securityMatcher("/authorization/**")
 
         //  estudar como csrf funciona
             .csrf((csrf) -> csrf.disable())
