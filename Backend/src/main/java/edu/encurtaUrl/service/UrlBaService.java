@@ -1,6 +1,7 @@
 package edu.encurtaUrl.service;
 
 import edu.encurtaUrl.dto.response.UrlResponseDto;
+import edu.encurtaUrl.exception.urlRoutine.ExpiredUrl;
 import edu.encurtaUrl.exception.urlRoutine.InvalidUrlException;
 import edu.encurtaUrl.model.UrlBa;
 import edu.encurtaUrl.model.UserBa;
@@ -34,12 +35,13 @@ public class UrlBaService {
 
     public URI redirectMeUri(String urlEncurted){
         UrlBa urlEntity = urlBaRepository.findByShortUri(urlEncurted)
-                .orElseThrow(() -> new RuntimeException("Error, original uri not find"));
+                .orElseThrow(() -> new RuntimeException("Error, original uri not found"));
+                // todo fazer esse unit test
 
         // verify if it is valid
         Instant expiresAt = urlEntity.getExpiresAt();
         if(expiresAt.isBefore(Instant.now())){
-            throw new RuntimeException("Short url expired");
+            throw new ExpiredUrl();
         }
 
         String fullUri = urlEntity.getOriginalUri();
