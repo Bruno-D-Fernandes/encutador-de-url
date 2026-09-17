@@ -29,7 +29,7 @@ public class UrlBa {
     @Column(name = "short_uri", length = 450, nullable = false)
     private String shortUri;
 
-    @ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "id_owner", nullable = false)
     private UserBa owner;
 

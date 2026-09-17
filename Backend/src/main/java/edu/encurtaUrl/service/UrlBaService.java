@@ -9,6 +9,7 @@ import edu.encurtaUrl.repository.UrlBaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriBuilder;
@@ -60,6 +61,7 @@ public class UrlBaService {
         URI originalUri = URI.create(ValidatedfullUri);
 
         return originalUri;
+
     }
 
     @Transactional
@@ -95,7 +97,7 @@ public class UrlBaService {
 
         // saves the image
         try {
-            Files.createDirectory(root);
+            Files.createDirectories(root);
             String fileName = UUID.randomUUID() + "_" + originalFileName;
             Files.copy(file.getInputStream(), root.resolve(fileName));
         } catch (IOException e) {

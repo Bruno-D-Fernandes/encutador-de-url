@@ -48,19 +48,16 @@ public class UrlController {
         return ResponseEntity.ok(Map.of("ShortenedURL", shortUri));
     }
 
-
-
     @PostMapping("file")
     public ResponseEntity creatShortFile(
-            MultipartFile multipartFile,
+            @RequestParam("file") MultipartFile multipartFile,
             @AuthenticationPrincipal UserBa userBa
     ){
+        urlBaService.createShortFile(multipartFile, userBa);
 
-
-        urlBaService.cre
-
-        return ResponseEntity.
+        return ResponseEntity.ok("Short Uri para imagem criada com sucesso.");
     }
+
 //
 //    @GetMapping("file/{shortUrl}")
 //    public ResponseEntity createShortUriToFile(

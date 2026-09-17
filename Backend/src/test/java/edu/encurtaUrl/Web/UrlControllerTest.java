@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Nested;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @WebMvcTest
 public class UrlControllerTest {
 
-    @Mock
+
+    @MockitoBean
     private UrlBaService urlBaService;
 
     @InjectMocks
@@ -23,6 +25,7 @@ public class UrlControllerTest {
 
         @BeforeEach
         void setup(){
+
 
         }
 
