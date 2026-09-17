@@ -10,14 +10,22 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
@@ -26,6 +34,7 @@ public class UrlBaService {
     private final UrlBaRepository urlBaRepository;
     public static final SecureRandom secureRandom = new SecureRandom();
     private final EntityManager entityManager;
+    private final Path root = Paths.get("uploads/images");
 
     @Autowired
     public UrlBaService(UrlBaRepository urlBaRepository, EntityManager entityManager) {
@@ -69,6 +78,33 @@ public class UrlBaService {
 
         // todo return the complete uri
         return shortUri;
+    }
+
+    @Transactional
+    public void createShortFile(MultipartFile file, UserBa userBa){
+
+        String shortUrl = generateRandomUri();
+        String originalFileName = file.getOriginalFilename();
+        Instant createdAt = Instant.now();
+        Instant expiresAt = createdAt.plus(Duration.ofHours(2));
+
+        if(file.isEmpty()) throw new RuntimeException("temp, UrlService");
+
+        String contentType = file.getContentType();
+        if(contentType.isEmpty() || !contentType.startsWith("image/")) throw new RuntimeException("temp, UrlService");
+
+        // saves the image
+        try {
+            Files.createDirectory(root);
+            String fileName = UUID.randomUUID() + "_" + originalFileName;
+            Files.copy(file.getInputStream(), root.resolve(fileName));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        UrlBa urlBa = new UrlBa(null, originalFileName, shortUrl, userBa, createdAt, expiresAt);
+        urlBaRepository.save(urlBa);
+
     }
 
     public List<UrlResponseDto> getAllUrlByUser(UserBa userBa){

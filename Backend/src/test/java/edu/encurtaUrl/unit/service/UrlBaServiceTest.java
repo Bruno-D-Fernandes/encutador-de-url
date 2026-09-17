@@ -43,7 +43,6 @@ public class UrlBaServiceTest {
     void setUp() {
         userMockado = new UserBa("ASRCC-asccas-cacscas-ascasc", "Bruno", "Brun@gmail.com", "Bruno123", BigDecimal.valueOf(0L), null);
         urlMockada = new UrlBa(null, "www.gloogle.com" , "abcdefg", userMockado, Instant.now(),ZonedDateTime.now().plusHours(1).toInstant());
-
     }
 
     @Nested
@@ -51,7 +50,7 @@ public class UrlBaServiceTest {
 
         @Test
         @DisplayName("Must do the operation with success")
-        void SuccesCase1(){
+        void SuccessCase1(){
             String shortUri = urlBaService.createShortUri("https://www.youtube.com/", userMockado);
 
             assertAll(
