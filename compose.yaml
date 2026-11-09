@@ -3,13 +3,13 @@ services:
     image: mysql:latest
     container_name: encurta_db
     environment:
-      - MYSQL_ROOT_PASSWORD=RootPassword
-      - MYSQL_USER=Bruno
-      - MYSQL_PASSWORD=Bruno123
-      - MYSQL_DATABASE=encurta_db
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
 
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD}"]
       timeout: 5s
       interval: 10s
       retries: 10
@@ -30,9 +30,9 @@ services:
     build: ./backend
     container_name: encurta_back
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/encurta_db
-      - SPRING_DATASOURCE_USERNAME=Bruno
-      - SPRING_DATASOURCE_PASSWORD=Bruno123
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     depends_on:
       db:
         condition: service_healthy

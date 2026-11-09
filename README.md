@@ -6,9 +6,8 @@ Um serviço backend para encurtar URLs usando Spring Boot 4.1.0 com Java 17.
 
 Este projeto implementa um API REST para criar, gerenciar e redirecionar URLs encurtadas. Fornece funcionalidades de autenticação, persistência de dados e migrations automáticas.
 
-*O projeto não está e não será finalizado, o intuito dele era aprendizagem, no momento em que eu aprendi e prátiquei o que queria, encerrei o desenvolvimento dele. 
-Se você parar para analisar as funcionalidades do mesmo, vera que o projeto só conta com alguns testes essenciais já que não foi feito com TDD, mas não o suficiente, um post sem get e um armazenamento
-de imagens local o que impede crescimento horizontal, entre outras coisas. Virou postagem do linkedin porque conta pro meu desenvolvimento!*
+*O intuito do projeto é aprendizagem, se você parar para analisar as funcionalidades do mesmo, vera que o projeto só conta com alguns testes essenciais, mas não o suficiente, já que não foi feito com TDD, um post sem get e um armazenamento
+de imagens local o que impede crescimento horizontal, entre outras coisas.*
 
 
 ## ️ Stack Técnico
